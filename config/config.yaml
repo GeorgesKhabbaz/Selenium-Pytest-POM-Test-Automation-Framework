@@ -1,0 +1,14 @@
+app:
+  base_url: "https://example.com"
+
+browser:
+  name: "chrome"       # chrome | firefox
+  headless: true
+  implicit_wait: 0
+  page_load_timeout: 60
+  script_timeout: 30
+
+timeouts:
+  short: 3
+  medium: 10
+  long: 20
