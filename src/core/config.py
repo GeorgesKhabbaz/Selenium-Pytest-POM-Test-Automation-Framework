@@ -1,15 +1,19 @@
+"""Configuration loader for the framework. Reads config/config.yaml and exposes a typed object."""
 from dataclasses import dataclass
+from functools import lru_cache
 import os
 import yaml
 
 
 @dataclass
 class AppSettings:
+    """Application-level settings."""
     base_url: str
 
 
 @dataclass
 class BrowserSettings:
+    """Browser and WebDriver settings."""
     name: str
     headless: bool
     implicit_wait: int
@@ -19,6 +23,7 @@ class BrowserSettings:
 
 @dataclass
 class TimeoutSettings:
+    """Common wait durations to standardize explicit waits."""
     short: int
     medium: int
     long: int
@@ -26,26 +31,23 @@ class TimeoutSettings:
 
 @dataclass
 class FrameworkConfig:
+    """Top-level configuration composed of app, browser, and timeouts."""
     app: AppSettings
     browser: BrowserSettings
     timeouts: TimeoutSettings
 
 
-_config_cache: FrameworkConfig | None = None
-
-
 def load_yaml_config(path: str) -> dict:
+    """Load a YAML file and return a dict."""
     if not os.path.exists(path):
         raise FileNotFoundError(f"Config file not found: {path}")
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
 
 
+@lru_cache(maxsize=1)
 def get_config() -> FrameworkConfig:
-    global _config_cache
-    if _config_cache:
-        return _config_cache
-
+    """Return the parsed and validated framework configuration (cached)."""
     cfg = load_yaml_config(os.path.join("config", "config.yaml"))
 
     app = AppSettings(base_url=cfg["app"]["base_url"])
@@ -61,6 +63,4 @@ def get_config() -> FrameworkConfig:
         medium=int(cfg["timeouts"]["medium"]),
         long=int(cfg["timeouts"]["long"]),
     )
-    _config_cache = FrameworkConfig(
-        app=app, browser=browser, timeouts=timeouts)
-    return _config_cache
+    return FrameworkConfig(app=app, browser=browser, timeouts=timeouts)
