@@ -2,5 +2,5 @@ login_page:
   url: "/login"
   username_input: { by: "id", value: "username" }
   password_input: { by: "id", value: "password" }
-  submit_button:  { by: "css", value: "button[type='submit']" }
-  banner:         { by: "css", value: "div.banner" }
+  submit_button:  { by: "css", value: "button.radius" }
+  banner:         { by: "css", value: "div.example h2" }

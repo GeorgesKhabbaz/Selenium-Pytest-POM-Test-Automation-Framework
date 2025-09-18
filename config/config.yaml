@@ -1,5 +1,5 @@
 app:
-  base_url: "https://example.com"
+  base_url: "https://the-internet.herokuapp.com"
 
 browser:
   name: "chrome"       # chrome | firefox
